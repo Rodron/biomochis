@@ -135,6 +135,7 @@ MonoBehaviour:
   velocidad: 0
   hambre: 0
   edad: 0
+  prefab: {fileID: 6660378505300740599}
 --- !u!54 &6514912418770315523
 Rigidbody:
   m_ObjectHideFlags: 0
