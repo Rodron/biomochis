@@ -8,8 +8,8 @@ public class Biomochi : MonoBehaviour
     
     [SerializeField] Color color;
     enum Dietas { carnivoro, hervivoro, omnivoro };
-    [SerializeField] int gloton;
-    [SerializeField] float size;
+    [SerializeField] int gloton = 3;
+    [SerializeField] float size = 1.0f;
 
     [SerializeField] Dietas dieta;
 
@@ -32,7 +32,7 @@ public class Biomochi : MonoBehaviour
     [SerializeField] float[] genC;
 
     const int limitGen = 3;
-    List<Genes> genes = new List<Genes>();
+    [SerializeField]List<Genes> genes = new List<Genes>(limitGen);
 
     //atributos
 
@@ -116,7 +116,7 @@ public class Biomochi : MonoBehaviour
 
     public void Start()
     {
-        gameObject.GetComponent<Renderer>().material.color = this.color;
+        gameObject.GetComponentInChildren<Renderer>().material.color = this.color;
         gameObject.GetComponent<Transform>().localScale *= this.size;
     }
 }
