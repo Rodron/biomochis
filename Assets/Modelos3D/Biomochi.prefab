@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 6514912418770315523}
   - component: {fileID: 6514912418770315524}
   m_Layer: 0
-  m_Name: Biomochi 1
+  m_Name: Biomochi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -135,6 +135,7 @@ MonoBehaviour:
   velocidad: 0
   hambre: 0
   edad: 0
+  prefab: {fileID: 6660378505300740599}
 --- !u!54 &6514912418770315523
 Rigidbody:
   m_ObjectHideFlags: 0

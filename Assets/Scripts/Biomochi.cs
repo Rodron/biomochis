@@ -5,12 +5,11 @@ using UnityEngine;
 public class Biomochi : MonoBehaviour
 {
     //genes heredados
-    
+    float t;
     [SerializeField] Color color;
-    enum Dietas { carnivoro, hervivoro, omnivoro };
+    public enum Dietas { carnivoro, hervivoro, omnivoro };
     [SerializeField] int gloton = 3;
     [SerializeField] float size = 1.0f;
-
     [SerializeField] Dietas dieta;
 
     //genes aleatorios
@@ -40,10 +39,11 @@ public class Biomochi : MonoBehaviour
     [SerializeField] float velocidad; //depende tamaño
     [SerializeField] int hambre; //0-glotoneria
     [SerializeField] float edad;
+    [SerializeField] GameObject prefab;
 
     //constructor
 
-    public Biomochi(Color color, int gloton, float size, int dietaTipo)
+    /*public Biomochi(Color color, int gloton, float size, int dietaTipo)
     {
         this.color = color;
         this.gloton = gloton;
@@ -63,7 +63,7 @@ public class Biomochi : MonoBehaviour
         edad = 0.0f;
 
         randomGen();
-    }
+    }*/
 
     void randomGen()
     {
@@ -92,7 +92,7 @@ public class Biomochi : MonoBehaviour
         }
     }
 
-    public Biomochi modoSexo(Biomochi mochiPartner) {
+    public void modoSexo(Biomochi mochiPartner) {
 
         float v = Random.Range(0.0f, 1.0f);
         Color newColor = v * this.color + (1 - v) * mochiPartner.color;
@@ -102,6 +102,7 @@ public class Biomochi : MonoBehaviour
 
         v = Random.Range(0.0f, 1.0f);
         float newSize = v * this.size + (1 - v) * mochiPartner.size;
+        
         int newDieta;
         if (this.dieta == mochiPartner.dieta)
         {
@@ -110,13 +111,45 @@ public class Biomochi : MonoBehaviour
         else {
             newDieta = Random.Range(0, 3);
         }
+        
+        
+        GameObject child = Instantiate(prefab,new Vector3 (this.gameObject.GetComponent<Transform>().position.x + 5, this.gameObject.GetComponent<Transform>().position.y, this.gameObject.GetComponent<Transform>().position.z + 5), Quaternion.identity);        
+        
+        child.GetComponent<Biomochi>().InstantiateAttrib(newColor,newGloton,newSize,newDieta);
+    }
 
-        return new Biomochi(newColor,newGloton,newSize,newDieta);
+    public void InstantiateAttrib(Color sourceColor, int sourceGloton, float sourceSize, int sourceDiet){
+        this.color = sourceColor;        
+        this.gloton = sourceGloton;
+        this.size = sourceSize;
+
+        switch (sourceDiet)
+        {
+            case 0: this.dieta = Dietas.carnivoro; break;
+            case 1: this.dieta = Dietas.hervivoro; break;
+            case 2: this.dieta = Dietas.omnivoro; break;
+        }
+
+        sexo = Random.Range(0,2) != 0;
+        velocidad = size;
+
+        this.randomGen();
+        
+        UpdateVisuals();
+    }    
+
+    public void UpdateVisuals(){
+        this.gameObject.GetComponentInChildren<Renderer>().material.color = this.color;
+        this.gameObject.GetComponent<Transform>().localScale *= this.size;        
     }
 
     public void Start()
     {
-        gameObject.GetComponentInChildren<Renderer>().material.color = this.color;
-        gameObject.GetComponent<Transform>().localScale *= this.size;
+        randomGen();
+        UpdateVisuals();
+    }
+
+    public void Update(){
+
     }
 }
