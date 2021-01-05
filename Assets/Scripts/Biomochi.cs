@@ -93,7 +93,9 @@ public class Biomochi : MonoBehaviour
     }
 
     public void modoSexo(Biomochi mochiPartner) {
+        // Executar animação
 
+        // Cuando a animação foi executada
         float v = Random.Range(0.0f, 1.0f);
         Color newColor = v * this.color + (1 - v) * mochiPartner.color;
 
@@ -113,7 +115,7 @@ public class Biomochi : MonoBehaviour
         }
         
         
-        GameObject child = Instantiate(prefab,new Vector3 (this.gameObject.GetComponent<Transform>().position.x + 5, this.gameObject.GetComponent<Transform>().position.y, this.gameObject.GetComponent<Transform>().position.z + 5), Quaternion.identity);        
+        GameObject child = Instantiate(prefab,new Vector3 (this.gameObject.GetComponent<Transform>().position.x - .5f, this.gameObject.GetComponent<Transform>().position.y, this.gameObject.GetComponent<Transform>().position.z + .2f), Quaternion.identity);
         
         child.GetComponent<Biomochi>().InstantiateAttrib(newColor,newGloton,newSize,newDieta);
     }
