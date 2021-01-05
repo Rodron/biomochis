@@ -1935,7 +1935,7 @@ TerrainCollider:
   m_GameObject: {fileID: 2082778680}
   m_Material: {fileID: 0}
   m_Enabled: 1
-  m_TerrainData: {fileID: 15600000, guid: 8088d2ac0f56fbf44bc329f7b5c423cb, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: 5606363c07fc1fb46aae1b6a38ad7a79, type: 2}
   m_EnableTreeColliders: 1
 --- !u!218 &2082778682
 Terrain:
@@ -1978,7 +1978,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2082778680}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -500, y: 0, z: -500}
+  m_LocalPosition: {x: -350, y: 0, z: -350}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2110,6 +2110,11 @@ PrefabInstance:
     - target: {fileID: 6279630154447278925, guid: d06475f7fbf7b654bba36dd1749d189a,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6514912418770315523, guid: d06475f7fbf7b654bba36dd1749d189a,
+        type: 3}
+      propertyPath: m_IsKinematic
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6660378505300740599, guid: d06475f7fbf7b654bba36dd1749d189a,
