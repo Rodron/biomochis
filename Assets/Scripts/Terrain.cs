@@ -8,12 +8,15 @@ public class Terrain : MonoBehaviour
     [SerializeField] GameObject hoguera;
     [SerializeField] GameObject lago;
     [SerializeField] GameObject comida;
-    float gen;
-    public int limite = 30;
-    int contador = 0;
+    float gen = 0f;
+    float genC = 0f;
+    int foodCount = 0;
     Transform newtransform;
 
-    // Start is called before the first frame update
+    //Variables del mundo
+    int climate = 0;
+    public int population = 0;    
+    
     void Start()
     {
         newtransform = this.GetComponent<Transform>();
@@ -46,19 +49,28 @@ public class Terrain : MonoBehaviour
         
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         gen += Time.deltaTime;
-        if (gen >= 1 && contador <= limite)
+        if (gen >= 1 && foodCount <= population*4)
         {
-                    Instantiate(comida, new Vector3(
-                        newtransform.position.x + Random.Range(100, 400),
-                        newtransform.position.y + 1,
-                        newtransform.position.z + Random.Range(100, 400)),
-                        Quaternion.identity);
-            contador++;
+            Instantiate(comida, new Vector3(
+                newtransform.position.x + Random.Range(100, 400),
+                newtransform.position.y + 1,
+                newtransform.position.z + Random.Range(100, 400)),
+                Quaternion.identity);
             
+            foodCount++;
+            
+            gen = 0;
+        }
+
+
+        genC += Time.deltaTime;
+        if (gen >= 120)
+        {
+            climate = Random.Range(-1, 2);            
             gen = 0;
         }
     }
