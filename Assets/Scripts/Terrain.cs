@@ -5,11 +5,10 @@ using UnityEngine;
 public class Terrain : MonoBehaviour
 {
 
-    public GameObject hoguera;
-    public GameObject lago;
-    public GameObject comida;
-    public GameObject terreno;
-    public float gen;
+    [SerializeField] GameObject hoguera;
+    [SerializeField] GameObject lago;
+    [SerializeField] GameObject comida;
+    float gen;
     public int limite = 30;
     int contador = 0;
     Transform newtransform;
@@ -17,31 +16,34 @@ public class Terrain : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        newtransform = terreno.GetComponent<Transform>();
-        for (int i = 50; i < 450; i += Random.Range(50, 150))
-        {
-            for (int j = 50; j < 450; j += Random.Range(50, 150))
-            {
-                Instantiate(hoguera, new Vector3(
-                    newtransform.position.x + i,
-                    newtransform.position.y + 1,
-                    newtransform.position.z + j),
-                    Quaternion.identity);
-            }
+        newtransform = this.GetComponent<Transform>();
 
-        }
-        for (int i = 50; i < 450; i += Random.Range(50, 150))
+        for (int i = 100; i < 400; i += Random.Range(50, 100))
         {
-            for (int j = 50; j < 450; j += Random.Range(50, 150))
+            for (int j = 100; j < 400; j += Random.Range(50, 100))
             {
-                Instantiate(lago, new Vector3(
-                    newtransform.position.x + i,
-                    newtransform.position.y + 1,
-                    newtransform.position.z + j),
-                    Quaternion.identity);
+                if (0 != Random.Range(0, 2))
+                {
+                    Instantiate(hoguera, new Vector3(
+                        newtransform.localPosition.x + i + Random.Range(-35, 35),
+                        newtransform.localPosition.y + 1,
+                        newtransform.localPosition.z + j + Random.Range(-35, 35)),
+                        Quaternion.identity);
+                }
+                else
+                {
+                    Instantiate(lago, new Vector3(
+                        newtransform.localPosition.x + i + Random.Range(-35, 35),
+                        newtransform.localPosition.y + 1,
+                        newtransform.localPosition.z + j + Random.Range(-35, 35)),
+                        Quaternion.identity);
+                }
             }
-
+           
         }
+        
+                
+        
     }
 
     // Update is called once per frame
@@ -51,9 +53,9 @@ public class Terrain : MonoBehaviour
         if (gen >= 1 && contador <= limite)
         {
                     Instantiate(comida, new Vector3(
-                        newtransform.position.x + Random.Range(50, 350),
+                        newtransform.position.x + Random.Range(100, 400),
                         newtransform.position.y + 1,
-                        newtransform.position.z + Random.Range(50, 350)),
+                        newtransform.position.z + Random.Range(100, 400)),
                         Quaternion.identity);
             contador++;
             

@@ -27,10 +27,9 @@ public class Biomochi : MonoBehaviour
         Tenacidad,
         Metabolismo,
     };
+    public object[] genC = new object[10];
 
-    [SerializeField] float[] genC;
-
-    const int limitGen = 3;
+    const int limitGen = 4;
     [SerializeField]List<Genes> genes = new List<Genes>(limitGen);
 
     //atributos
@@ -68,25 +67,27 @@ public class Biomochi : MonoBehaviour
     void randomGen()
     {
         HashSet<int> gen = new HashSet<int>();
-
         while (gen.Count < limitGen)
         {
             gen.Add(Random.Range(0, 10));
         };
-
+        
+        
+        
+        
         foreach (int i in gen)
         {
             switch (i)
             {
-                case 0: genes.Add(Genes.Social); genC[i] = Random.Range(0.2f,1.0f); break;
+                case 0: genes.Add(Genes.Social); genC[i] = Random.Range(0.2f, 1.0f); break;
                 case 1: genes.Add(Genes.Flatulencia); genC[i] = Random.Range(0.25f, 0.85f); break;
                 case 2: genes.Add(Genes.EDV); genC[i] = Random.Range(0.25f, 1.75f); break;
-                case 3: genes.Add(Genes.Canibal); break;
-                case 4: genes.Add(Genes.Cultismo); break;
-                case 5: genes.Add(Genes.Zombie); break;
-                case 6: genes.Add(Genes.Jugueton); break;
-                case 7: genes.Add(Genes.Aventurero); break;
-                case 8: genes.Add(Genes.Tenacidad); break;
+                case 3: genes.Add(Genes.Canibal); genC[i] = true; break;
+                case 4: genes.Add(Genes.Cultismo); genC[i] = true; break;
+                case 5: genes.Add(Genes.Zombie); genC[i] = true; break;
+                case 6: genes.Add(Genes.Jugueton); genC[i] = true; break;
+                case 7: genes.Add(Genes.Aventurero); genC[i] = true; break;
+                case 8: genes.Add(Genes.Tenacidad); genC[i] = true; break;
                 case 9: genes.Add(Genes.Metabolismo); genC[i] = Random.Range(0.8f, 1.2f); break;
             }
         }
