@@ -6,6 +6,7 @@ public class Biomochi : MonoBehaviour
 {
     //genes heredados
     float t;
+    int id;
     [SerializeField] Color color;
     public enum Dietas { carnivoro, hervivoro, omnivoro };
     [SerializeField] int gloton = 3;
@@ -14,7 +15,7 @@ public class Biomochi : MonoBehaviour
 
     //genes aleatorios
 
-    enum Genes
+    public enum Genes
     {
         Social,
         Flatulencia,
@@ -27,11 +28,11 @@ public class Biomochi : MonoBehaviour
         Tenacidad,
         Metabolismo,
     };
-    public object[] genC = new object[10];
 
-    const int limitGen = 4;
-    [SerializeField]List<Genes> genes = new List<Genes>(limitGen);
+    [SerializeField]const int limitGen = 3;
 
+    Dictionary<Genes, object> genes = new Dictionary<Genes, object>(limitGen);
+        
     //atributos
 
     [SerializeField] bool sexo; //true H, false M;
@@ -71,25 +72,26 @@ public class Biomochi : MonoBehaviour
         {
             gen.Add(Random.Range(0, 10));
         };
-        
-        
-        
-        
+                
         foreach (int i in gen)
         {
             switch (i)
             {
-                case 0: genes.Add(Genes.Social); genC[i] = Random.Range(0.2f, 1.0f); break;
-                case 1: genes.Add(Genes.Flatulencia); genC[i] = Random.Range(0.25f, 0.85f); break;
-                case 2: genes.Add(Genes.EDV); genC[i] = Random.Range(0.25f, 1.75f); break;
-                case 3: genes.Add(Genes.Canibal); genC[i] = true; break;
-                case 4: genes.Add(Genes.Cultismo); genC[i] = true; break;
-                case 5: genes.Add(Genes.Zombie); genC[i] = true; break;
-                case 6: genes.Add(Genes.Jugueton); genC[i] = true; break;
-                case 7: genes.Add(Genes.Aventurero); genC[i] = true; break;
-                case 8: genes.Add(Genes.Tenacidad); genC[i] = true; break;
-                case 9: genes.Add(Genes.Metabolismo); genC[i] = Random.Range(0.8f, 1.2f); break;
+                case 0: genes.Add(Genes.Social, Random.Range(0.2f, 1.0f)); break;
+                case 1: genes.Add(Genes.Flatulencia,Random.Range(0.25f, 0.85f)); break;
+                case 2: genes.Add(Genes.EDV, Random.Range(0.25f, 1.75f)); break;
+                case 3: genes.Add(Genes.Canibal, true); break;
+                case 4: genes.Add(Genes.Cultismo, true); break;
+                case 5: genes.Add(Genes.Zombie, true); break;
+                case 6: genes.Add(Genes.Jugueton, true); break;
+                case 7: genes.Add(Genes.Aventurero, true); break;
+                case 8: genes.Add(Genes.Tenacidad,true); break;
+                case 9: genes.Add(Genes.Metabolismo, Random.Range(0.8f, 1.2f)); break;
             }
+            /*
+            Debug.Log((Genes) i);
+            Debug.Log(genes[(Genes) i]);
+            */
         }
     }
 

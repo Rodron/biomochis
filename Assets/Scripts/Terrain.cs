@@ -7,10 +7,12 @@ public class Terrain : MonoBehaviour
 
     [SerializeField] GameObject hoguera;
     [SerializeField] GameObject lago;
-    [SerializeField] GameObject comida;
+    [SerializeField] GameObject[] comida;
     float gen;
     public int limite = 30;
     int contador = 0;
+    int poblacion;
+    int mochiid;
     Transform newtransform;
 
     // Start is called before the first frame update
@@ -18,9 +20,9 @@ public class Terrain : MonoBehaviour
     {
         newtransform = this.GetComponent<Transform>();
 
-        for (int i = 100; i < 400; i += Random.Range(50, 100))
+        for (int i = 100; i < 400; i += Random.Range(25, 100))
         {
-            for (int j = 100; j < 400; j += Random.Range(50, 100))
+            for (int j = 100; j < 400; j += Random.Range(25, 100))
             {
                 if (0 != Random.Range(0, 2))
                 {
@@ -49,17 +51,18 @@ public class Terrain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gen += Time.deltaTime;
-        if (gen >= 1 && contador <= limite)
+        //gen += Time.deltaTime;
+        if (contador <= limite)
         {
-                    Instantiate(comida, new Vector3(
+            int i = Random.Range(0,3);
+                    Instantiate(comida[i], new Vector3(
                         newtransform.position.x + Random.Range(100, 400),
                         newtransform.position.y + 1,
                         newtransform.position.z + Random.Range(100, 400)),
                         Quaternion.identity);
             contador++;
             
-            gen = 0;
+           // gen = 0;
         }
     }
 }
