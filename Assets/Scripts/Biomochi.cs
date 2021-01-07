@@ -9,6 +9,7 @@ public class Biomochi : MonoBehaviour
     int id;
     Vector3 dir = new Vector3(0,0,0);
     float movT;
+    public bool stop = false;
     float changeDirT = 0f;
     [SerializeField] Color color;
     public enum Dietas { carnivoro, hervivoro, omnivoro };
@@ -152,21 +153,28 @@ public class Biomochi : MonoBehaviour
     }
 
     public void Move(){
-        Debug.Log("hola0");
-        
+        //this.gameObject.GetComponent<Animator>().SetBool("movimiento", true);
         if(movT>changeDirT){
             changeDirT = Random.Range(2.5f,5f);           
             dir = newDirection();
             movT = 0;
             Debug.Log(dir);            
             transform.LookAt(transform.position+dir);
-        }
+        }        
         transform.Translate(dir*velocidad, Space.World);
+        
         //transform.Translate(transform.forward*velocidad);
     }
 
     Vector3 newDirection(){
         return new Vector3 (Random.Range(-1f,2f),0,Random.Range(-1f,2f)).normalized;
+    }
+    
+    void OnTriggerExit(Collider obj){                
+        dir = -transform.position.normalized;
+        changeDirT = Random.Range(6f,9f);           
+        movT = 0;
+        transform.LookAt(transform.position+dir);
     }
 
     public void Start()
@@ -178,6 +186,7 @@ public class Biomochi : MonoBehaviour
 
     public void Update(){
         movT += Time.deltaTime;
-        Move();
+        if(!stop)
+            Move();
     }
 }
