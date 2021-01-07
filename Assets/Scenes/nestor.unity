@@ -338,6 +338,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 414401101}
   m_CullTransparentMesh: 0
+--- !u!1 &422660010 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6660378505300740599, guid: d06475f7fbf7b654bba36dd1749d189a,
+    type: 3}
+  m_PrefabInstance: {fileID: 434584881013252341}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &422660011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422660010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a34d956be8136642865c3c296d6f8e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  esZombie: 0
+  tieneHambre: 1
+  esCultista: 0
+  diosInteractua: 0
+  ClimaChungo: 0
+  esAdulto: 0
+  esSocial: 0
+  tenacidad: 0
 --- !u!1 &482924504
 GameObject:
   m_ObjectHideFlags: 0
@@ -1836,6 +1862,7 @@ GameObject:
   - component: {fileID: 1908304211}
   - component: {fileID: 1908304210}
   - component: {fileID: 1908304209}
+  - component: {fileID: 1908304212}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1908,6 +1935,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
+--- !u!114 &1908304212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1908304208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73638b8e4b1fa7a44a6755b2cecb3fcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2082778680
 GameObject:
   m_ObjectHideFlags: 0
