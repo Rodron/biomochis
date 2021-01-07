@@ -7,6 +7,9 @@ public class Biomochi : MonoBehaviour
     //genes heredados
     float t;
     int id;
+    Vector3 dir = new Vector3(0,0,0);
+    float movT;
+    float changeDirT = 0f;
     [SerializeField] Color color;
     public enum Dietas { carnivoro, hervivoro, omnivoro };
     [SerializeField] int gloton = 3;
@@ -136,7 +139,7 @@ public class Biomochi : MonoBehaviour
         }
 
         sexo = Random.Range(0,2) != 0;
-        velocidad = size;
+        velocidad = size/10;
 
         this.randomGen();
         
@@ -148,13 +151,33 @@ public class Biomochi : MonoBehaviour
         this.gameObject.GetComponent<Transform>().localScale *= this.size;        
     }
 
+    public void Move(){
+        Debug.Log("hola0");
+        
+        if(movT>changeDirT){
+            changeDirT = Random.Range(2.5f,5f);           
+            dir = newDirection();
+            movT = 0;
+            Debug.Log(dir);            
+            transform.LookAt(transform.position+dir);
+        }
+        transform.Translate(dir*velocidad, Space.World);
+        //transform.Translate(transform.forward*velocidad);
+    }
+
+    Vector3 newDirection(){
+        return new Vector3 (Random.Range(-1f,2f),0,Random.Range(-1f,2f)).normalized;
+    }
+
     public void Start()
     {
+        velocidad = size / 45;
         randomGen();
         UpdateVisuals();
     }
 
     public void Update(){
-
+        movT += Time.deltaTime;
+        Move();
     }
 }
