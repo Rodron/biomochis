@@ -44,7 +44,7 @@ public class Biomochi : MonoBehaviour
     [SerializeField] int hambre; //0-glotoneria
     [SerializeField] float edad;
     [SerializeField] GameObject prefab;
-
+    
     //constructor
 
     /*public Biomochi(Color color, int gloton, float size, int dietaTipo)
@@ -68,6 +68,22 @@ public class Biomochi : MonoBehaviour
 
         randomGen();
     }*/
+
+    public void Born(){
+        Terrain mundo = GameObject.FindGameObjectWithTag("world").GetComponent<Terrain>();
+        id = mundo.lastId;
+        mundo.population++;
+        mundo.lastId++;
+        velocidad = size / 45;
+        randomGen();
+        UpdateVisuals();
+    }
+
+    public void Die(){
+        GameObject.FindGameObjectWithTag("world").GetComponent<Terrain>().population--;
+        gameObject.SetActive(false);
+        //DestroyObject(gameObject);
+    }
 
     void randomGen()
     {
@@ -179,9 +195,7 @@ public class Biomochi : MonoBehaviour
 
     public void Start()
     {
-        velocidad = size / 45;
-        randomGen();
-        UpdateVisuals();
+        Born();
     }
 
     public void Update(){
