@@ -6,7 +6,7 @@ using UnityEngine.AI;
 class CustomNeedMachine{
 
     
-
+    public GameObject biomochi;
     public int currentState;
     bool objetivoDetectado;
     bool llegadaAlObjetivo;
@@ -16,8 +16,9 @@ class CustomNeedMachine{
     
     bool animacionTerminada;
 
-    public CustomNeedMachine(){
+    public CustomNeedMachine(GameObject biom){
         currentState = 0;
+        biomochi = biom;
         exit = true;
     }
 
@@ -46,7 +47,7 @@ class CustomNeedMachine{
     
     void lookForObjectivePerception(string typeOfObjective){
         Debug.Log("BUSCANDO " + typeOfObjective);
-        if(objetivoDetectado ){
+        if(objetivoDetectado){
             Debug.Log(typeOfObjective + "ENCONTRADO");
             currentState = 1;
         }
@@ -71,9 +72,4 @@ class CustomNeedMachine{
         }
         
     }
-
-
-
-
-
 }

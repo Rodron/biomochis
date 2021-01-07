@@ -15,7 +15,7 @@ public class Biomochi : MonoBehaviour
     public enum Dietas { carnivoro, hervivoro, omnivoro };
     [SerializeField] int gloton = 3;
     [SerializeField] float size = 1.0f;
-    [SerializeField] Dietas dieta;
+    public Dietas dieta;
 
     //genes aleatorios
 

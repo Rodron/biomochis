@@ -70,7 +70,7 @@ public class NewBT : MonoBehaviour {
     {
         typeOfObjective = "Biomochi";
         NewBT_BT = new BehaviourTreeEngine(false);
-        needMachine = new CustomNeedMachine();
+        needMachine = new CustomNeedMachine(gameObject);
         CreateBehaviourTree();
         
     }
@@ -147,7 +147,7 @@ public class NewBT : MonoBehaviour {
         Debug.Log(needMachine.exit);
         if(!needMachine.exit){
             Debug.Log("MAQUINA EJECUTA");
-             needMachine.Update(typeOfObjective,animacionTerminada,objetivoDetectado,llegadaAlObjetivo);
+            needMachine.Update(typeOfObjective,animacionTerminada,objetivoDetectado,llegadaAlObjetivo);
         }
        
         NewBT_BT.Update();
@@ -166,6 +166,7 @@ public class NewBT : MonoBehaviour {
         //Write here the code for the success check for Zombie
         if(esZombie){
             Debug.Log("QUIERO COMER BIOMOCHIS");
+            typeOfObjective = "Biomochi";
             needMachine.exit = false;
             return ReturnValues.Succeed;
         }
@@ -222,7 +223,14 @@ public class NewBT : MonoBehaviour {
     
     private ReturnValues FriocalorSuccessCheck()
     {
-        if(ClimaChungo){
+        if (ClimaChungo)
+        {
+            if (GameObject.FindGameObjectWithTag("World").GetComponent<World>().climate == 0){ //frio
+                typeOfObjective = "hoguera";            
+            }
+            if(GameObject.FindGameObjectWithTag("World").GetComponent<World>().climate == 1){ //calor
+                typeOfObjective = "agua";
+            }
             Debug.Log("ME VOY A REFUGIAR QUE ME MATO");
             return ReturnValues.Succeed;
         }
@@ -239,6 +247,7 @@ public class NewBT : MonoBehaviour {
     {
         if(esSocial){
             Debug.Log("BUSCO A UN AMIGO");
+            typeOfObjective = "Biomochi";
             return ReturnValues.Succeed;
         }
         //Write here the code for the success check for Friocalor
@@ -251,7 +260,20 @@ public class NewBT : MonoBehaviour {
     
     private ReturnValues HambreSuccessCheck()
     {
-        if(tieneHambre){
+        if (tieneHambre)
+        {
+            if (gameObject.GetComponent<Biomochi>().dieta == Biomochi.Dietas.carnivoro){
+                typeOfObjective = "food_C";
+                //buscar esta
+            }
+            if (gameObject.GetComponent<Biomochi>().dieta == Biomochi.Dietas.hervivoro) {
+                typeOfObjective = "food_V";
+            }
+            if (gameObject.GetComponent<Biomochi>().dieta == Biomochi.Dietas.omnivoro)
+            {
+                typeOfObjective = "food";
+            }
+            needMachine.exit = false;                    
             Debug.Log("TENGO MUCHISIMO HAMBRE");
             return ReturnValues.Succeed;
         }
@@ -259,19 +281,16 @@ public class NewBT : MonoBehaviour {
         return ReturnValues.Failed;
     }
 
-
-
-
-
-
-        private void AdultoAction()
+    private void AdultoAction()
     {
         
     }
-    
+
     private ReturnValues AdultoSuccessCheck()
     {
-        if(esAdulto){
+        if (esAdulto)
+        {
+            typeOfObjective = "Biomochi";
             Debug.Log("MODO SEXO ACTIVADO");
             return ReturnValues.Succeed;
         }
@@ -283,53 +302,53 @@ public class NewBT : MonoBehaviour {
         Debug.Log("soy un zombie");
     }
 
-    private ReturnValues  ZombieNodeMachineSuccesCheck(){
+    private ReturnValues  SuccessCheck(){
         if(needMachine.exit){
-            needMachine.currentState = 0;
-           // needMachine.exit = false;
+            // needMachine.exit = false;
+            needMachine.currentState = 0;                      
             return ReturnValues.Succeed;
         }
 
         return ReturnValues.Failed;
     }
+    private ReturnValues ZombieNodeMachineSuccesCheck(){
+        return SuccessCheck();
+    }
      private void DiosNodeMachineAction(){
         
     }
 
-        private ReturnValues  DiosNodeMachineSuccesCheck(){
-
-        return ReturnValues.Failed;
+    private ReturnValues  DiosNodeMachineSuccesCheck(){
+        return SuccessCheck();
     }
      private void RefugiarseNodeMachineAction(){
         
     }
 
-        private ReturnValues  RefugiarseNodeMachineSuccesCheck(){
-
-        return ReturnValues.Failed;
+    private ReturnValues  RefugiarseNodeMachineSuccesCheck(){
+        return SuccessCheck();
     }
      private void ComerNodeMachineAction(){
         
     }
 
     private ReturnValues  ComerNodeMachineSuccesCheck(){
-
-        return ReturnValues.Failed;
+        return SuccessCheck();       
     }
-     private void SocializarNodeMachineAction(){
+    
+    private void SocializarNodeMachineAction(){
         
     }
     
-        private ReturnValues  SocializarNodeMachineSuccesCheck(){
-
-        return ReturnValues.Failed;
+    private ReturnValues  SocializarNodeMachineSuccesCheck(){
+        return SuccessCheck();
     }
-     private void ReproducirseNodeMachineAction(){
+    
+    private void ReproducirseNodeMachineAction(){
         
     }
 
-        private ReturnValues  ReproducirseNodeMachineSuccesCheck(){
-
-        return ReturnValues.Failed;
+    private ReturnValues  ReproducirseNodeMachineSuccesCheck(){
+        return SuccessCheck();
     }
 }
