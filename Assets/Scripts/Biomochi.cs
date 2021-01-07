@@ -70,7 +70,7 @@ public class Biomochi : MonoBehaviour
     }*/
 
     public void Born(){
-        Terrain mundo = GameObject.FindGameObjectWithTag("world").GetComponent<Terrain>();
+        World mundo = GameObject.FindGameObjectWithTag("world").GetComponent<World>();
         id = mundo.lastId;
         mundo.population++;
         mundo.lastId++;
@@ -80,7 +80,7 @@ public class Biomochi : MonoBehaviour
     }
 
     public void Die(){
-        GameObject.FindGameObjectWithTag("world").GetComponent<Terrain>().population--;
+        GameObject.FindGameObjectWithTag("world").GetComponent<World>().population--;
         gameObject.SetActive(false);
         //DestroyObject(gameObject);
     }
@@ -173,8 +173,7 @@ public class Biomochi : MonoBehaviour
         if(movT>changeDirT){
             changeDirT = Random.Range(2.5f,5f);           
             dir = newDirection();
-            movT = 0;
-            Debug.Log(dir);            
+            movT = 0;          
             transform.LookAt(transform.position+dir);
         }        
         transform.Translate(dir*velocidad, Space.World);

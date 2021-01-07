@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Terrain : MonoBehaviour
+public class World : MonoBehaviour
 {
-
+    
     [SerializeField] GameObject hoguera;
     [SerializeField] GameObject lago;
     [SerializeField] GameObject[] comida;
+    [SerializeField] GameObject luz;
     float gen = 0f;
     float genC = 0f;
     public int limite = 15;
@@ -15,12 +16,16 @@ public class Terrain : MonoBehaviour
     Transform newtransform;
 
     //Variables del mundo
-    public int climate = 0; //  (0)-->Normal   (-1)-->Frío     (1)-->Calor
+    float tclima = 0f;
+
+    public int climate = 2; //  (default)-->Normal   (0)-->Frío     (1)-->Calor
+    int current;
     public int population = 0;
     public int lastId;
     
     void Start()
     {
+        current = climate;
         newtransform = this.GetComponent<Transform>();
 
         for (int i = 100; i < 400; i += Random.Range(25, 100))
@@ -50,7 +55,41 @@ public class Terrain : MonoBehaviour
                 
         
     }
-    
+    public void forceClimate(int i) {
+        climate = i;
+
+        if (current != climate)
+        {
+
+            Debug.Log(climate);
+            switch (climate)
+            {
+                case 0: //frio
+
+                    Camera.main.GetComponent<Animator>().SetTrigger("frio");
+                    luz.GetComponent<Animator>().SetTrigger("frio");
+
+                    break;
+
+                case 1: //calor
+
+                    Camera.main.GetComponent<Animator>().SetTrigger("calor");
+                    luz.GetComponent<Animator>().SetTrigger("calor");
+
+                    break;
+
+                default: //normal
+
+                    Camera.main.GetComponent<Animator>().SetTrigger("normal");
+                    luz.GetComponent<Animator>().SetTrigger("normal");
+
+                    break;
+            }
+            current = climate;
+            genC = 0;
+        }
+       
+    }
     void Update()
     {
         gen += Time.deltaTime;
@@ -68,17 +107,13 @@ public class Terrain : MonoBehaviour
         }
 
         genC += Time.deltaTime;
-        if (genC >= 120)
+        if (genC >= tclima)
         {
-            climate = Random.Range(-1, 2);
-            switch(climate){
-                case -1:
-                    break;
-                case 0:
-                    break;
-                case 1:
-                    break;
-            }
+            tclima = Random.Range(30, 90);
+            climate = Random.Range(0, 4);
+            
+            if (climate > 2) { climate = 2;}
+            forceClimate(climate);
             genC = 0;
         }
     }
