@@ -5,6 +5,7 @@ using UnityEngine;
 public class Biomochi : MonoBehaviour
 {
     //genes heredados
+    float energy = 1000f;
     float t;
     int id;
     Vector3 dir = new Vector3(0,0,0);
@@ -16,6 +17,7 @@ public class Biomochi : MonoBehaviour
     [SerializeField] int gloton = 3;
     [SerializeField] float size = 1.0f;
     [SerializeField] public Dietas dieta;
+    Random biomochiRandom = new Random();   
 
     //genes aleatorios
 
@@ -77,6 +79,7 @@ public class Biomochi : MonoBehaviour
         velocidad = size / 45;
         randomGen();
         UpdateVisuals();
+        energy = 1000f*(id+1);
     }
 
     public void Die(){
@@ -169,16 +172,21 @@ public class Biomochi : MonoBehaviour
     }
 
     public void Move(){
-        //this.gameObject.GetComponent<Animator>().SetBool("movimiento", true);
+        this.gameObject.GetComponent<Animator>().SetBool("Movimiento", true);
+        if (this.genes.ContainsKey(Genes.Jugueton)){
+            this.gameObject.GetComponent<Animator>().SetBool("Jugueton", true);
+        }
+        //Random.InitState((Random.Range(id, id+100000)));
         if(movT>changeDirT){
             changeDirT = Random.Range(2.5f,5f);           
             dir = newDirection();
-            movT = 0;          
+            movT = 0;         
             transform.LookAt(transform.position+dir);
-        }        
+        }      
         transform.Translate(dir*velocidad, Space.World);
-        
         //transform.Translate(transform.forward*velocidad);
+
+        spendEnergy();
     }
 
     Vector3 newDirection(){
@@ -192,14 +200,29 @@ public class Biomochi : MonoBehaviour
         transform.LookAt(transform.position+dir);
     }
 
+    public void spendEnergy(){
+        //Random.InitState(id*(Random.Range(id, id+100000)));        
+        energy -= Random.Range(0.4f*id%3,1.3f);
+        if(energy <= 0){
+            this.gameObject.GetComponent<Animator>().SetBool("Movimiento", false);
+            movT = 0;
+            stop = true;
+        }
+    }
     public void Start()
     {
+        Debug.Log(Random.seed);
         Born();
     }
 
-    public void Update(){
-        movT += Time.deltaTime;
+    public void Update(){        
+        movT += Time.deltaTime;        
         if(!stop)
             Move();
+        if(movT>changeDirT && energy <= 0){
+            energy = 1000f*(id+1);
+            movT = 0;
+            stop = false;
+        }
     }
 }

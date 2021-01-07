@@ -6,8 +6,6 @@ using UnityEngine.AI;
 public class NewBT : MonoBehaviour {
 
     #region variables
-
-
     [SerializeField] bool objetivoDetectado;
     [SerializeField] bool llegadaAlObjetivo;
 
@@ -290,6 +288,7 @@ public class NewBT : MonoBehaviour {
     {
         if (esAdulto)
         {
+            if(gameObject.GetComponent<Biomochi>())
             typeOfObjective = "Biomochi";
             Debug.Log("MODO SEXO ACTIVADO");
             return ReturnValues.Succeed;
@@ -304,7 +303,6 @@ public class NewBT : MonoBehaviour {
 
     private ReturnValues  SuccessCheck(){
         if(needMachine.exit){
-            // needMachine.exit = false;
             needMachine.currentState = 0;                      
             return ReturnValues.Succeed;
         }
@@ -315,7 +313,9 @@ public class NewBT : MonoBehaviour {
         return SuccessCheck();
     }
      private void DiosNodeMachineAction(){
-        
+
+        gameObject.GetComponent<Animator>().SetTrigger("dios");
+
     }
 
     private ReturnValues  DiosNodeMachineSuccesCheck(){
