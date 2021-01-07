@@ -9,6 +9,7 @@ public class Biomochi : MonoBehaviour
     int id;
     Vector3 dir = new Vector3(0,0,0);
     float movT;
+    float coolmov = 0;
     public bool stop = false;
     float changeDirT = 0f;
     [SerializeField] Color color;
@@ -171,6 +172,7 @@ public class Biomochi : MonoBehaviour
     public void Move(){
         //this.gameObject.GetComponent<Animator>().SetBool("movimiento", true);
         if(movT>changeDirT){
+            
             changeDirT = Random.Range(2.5f,5f);           
             dir = newDirection();
             movT = 0;          
@@ -184,14 +186,40 @@ public class Biomochi : MonoBehaviour
     Vector3 newDirection(){
         return new Vector3 (Random.Range(-1f,2f),0,Random.Range(-1f,2f)).normalized;
     }
-    
-    void OnTriggerExit(Collider obj){                
-        dir = -transform.position.normalized;
-        changeDirT = Random.Range(6f,9f);           
-        movT = 0;
-        transform.LookAt(transform.position+dir);
-    }
 
+    void OnTriggerExit(Collider obj)
+    {
+        if (obj.gameObject.tag.Equals("world"))
+        {
+            dir = -transform.position.normalized;
+            changeDirT = Random.Range(6f, 9f);
+            movT = 0;
+            transform.LookAt(transform.position + dir);
+        }
+        if (obj.gameObject.tag.Equals("Interact"))
+        {
+
+            Debug.Log("mochi pequeño sale");
+
+        }
+        if (obj.gameObject.tag.Equals("Perception"))
+        {
+
+            Debug.Log("mochi grande");
+
+        }
+
+    }
+    void OnTriggerEnter(Collider obj)
+    {
+        if (obj.gameObject.tag.Equals("Interact"))
+        {
+
+            Debug.Log("mochi pequeño entra");
+
+        }
+
+    }
     public void Start()
     {
         Born();
@@ -199,7 +227,9 @@ public class Biomochi : MonoBehaviour
 
     public void Update(){
         movT += Time.deltaTime;
-        if(!stop)
+        //coolmov += Time.deltaTime;
+        
+        if (!stop)
             Move();
     }
 }

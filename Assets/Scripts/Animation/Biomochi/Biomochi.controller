@@ -231,7 +231,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Adulto
     m_EventTreshold: 3
   - m_ConditionMode: 1
-    m_ConditionEvent: sexo
+    m_ConditionEvent: Sexo
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -7702091779804309480}
@@ -283,42 +283,42 @@ AnimatorController:
   m_Name: Biomochi
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: movimiento
+  - m_Name: Movimiento
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: Jugueton
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: interaccion
+    m_Controller: {fileID: 0}
+  - m_Name: Interaccion
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: dios
+    m_Controller: {fileID: 0}
+  - m_Name: Dios
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: sexo
+    m_Controller: {fileID: 0}
+  - m_Name: Sexo
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: Adulto
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -341,7 +341,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: dios
+    m_ConditionEvent: Dios
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -8991513880233373887}
@@ -425,7 +425,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: movimiento
+    m_ConditionEvent: Movimiento
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -4116799730693407234}
@@ -450,7 +450,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: interaccion
+    m_ConditionEvent: Interaccion
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5080852474505703105}
