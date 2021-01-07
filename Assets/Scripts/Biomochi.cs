@@ -158,7 +158,7 @@ public class Biomochi : MonoBehaviour
         sexo = Random.Range(0,2) != 0;
         velocidad = size/10;
 
-        this.randomGen();
+        //this.randomGen();
         
         UpdateVisuals();
     }    
