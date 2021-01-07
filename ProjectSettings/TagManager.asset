@@ -9,6 +9,10 @@ TagManager:
   - food
   - world
   - Biomochi
+  - hoguera
+  - agua
+  - Interact
+  - Perception
   layers:
   - Default
   - TransparentFX

@@ -10,6 +10,7 @@ public class Biomochi : MonoBehaviour
     int id;
     Vector3 dir = new Vector3(0,0,0);
     float movT;
+    float coolmov = 0;
     public bool stop = false;
     float changeDirT = 0f;
     [SerializeField] Color color;
@@ -17,7 +18,7 @@ public class Biomochi : MonoBehaviour
     [SerializeField] int gloton = 3;
     [SerializeField] float size = 1.0f;
     [SerializeField] public Dietas dieta;
-    Random biomochiRandom = new Random();   
+    Random biomochiRandom = new Random();
 
     //genes aleatorios
 
@@ -38,7 +39,7 @@ public class Biomochi : MonoBehaviour
     [SerializeField]const int limitGen = 3;
 
     Dictionary<Genes, object> genes = new Dictionary<Genes, object>(limitGen);
-        
+
     //atributos
 
     public bool sexo; //true H, false M;
@@ -46,7 +47,7 @@ public class Biomochi : MonoBehaviour
     [SerializeField] int hambre; //0-glotoneria
     [SerializeField] float edad;
     [SerializeField] GameObject prefab;
-    
+
     //constructor
 
     /*public Biomochi(Color color, int gloton, float size, int dietaTipo)
@@ -54,7 +55,7 @@ public class Biomochi : MonoBehaviour
         this.color = color;
         this.gloton = gloton;
         this.size = size;
-        
+
 
         switch (dietaTipo)
         {
@@ -95,7 +96,7 @@ public class Biomochi : MonoBehaviour
         {
             gen.Add(Random.Range(0, 10));
         };
-                
+
         foreach (int i in gen)
         {
             switch (i)
@@ -130,7 +131,7 @@ public class Biomochi : MonoBehaviour
 
         v = Random.Range(0.0f, 1.0f);
         float newSize = v * this.size + (1 - v) * mochiPartner.size;
-        
+
         int newDieta;
         if (this.dieta == mochiPartner.dieta)
         {
@@ -139,15 +140,15 @@ public class Biomochi : MonoBehaviour
         else {
             newDieta = Random.Range(0, 3);
         }
-        
-        
+
+
         GameObject child = Instantiate(prefab,new Vector3 (this.gameObject.GetComponent<Transform>().position.x - .5f, this.gameObject.GetComponent<Transform>().position.y, this.gameObject.GetComponent<Transform>().position.z + .2f), Quaternion.identity);
-        
+
         child.GetComponent<Biomochi>().InstantiateAttrib(newColor,newGloton,newSize,newDieta);
     }
 
     public void InstantiateAttrib(Color sourceColor, int sourceGloton, float sourceSize, int sourceDiet){
-        this.color = sourceColor;        
+        this.color = sourceColor;
         this.gloton = sourceGloton;
         this.size = sourceSize;
 
@@ -162,13 +163,13 @@ public class Biomochi : MonoBehaviour
         velocidad = size/10;
 
         //this.randomGen();
-        
+
         UpdateVisuals();
-    }    
+    }
 
     public void UpdateVisuals(){
         this.gameObject.GetComponentInChildren<Renderer>().material.color = this.color;
-        this.gameObject.GetComponent<Transform>().localScale *= this.size;        
+        this.gameObject.GetComponent<Transform>().localScale *= this.size;
     }
 
     public void Move(){
@@ -178,11 +179,12 @@ public class Biomochi : MonoBehaviour
         }
         //Random.InitState((Random.Range(id, id+100000)));
         if(movT>changeDirT){
-            changeDirT = Random.Range(2.5f,5f);           
+
+            changeDirT = Random.Range(2.5f,5f);
             dir = newDirection();
-            movT = 0;         
+            movT = 0;
             transform.LookAt(transform.position+dir);
-        }      
+        }
         transform.Translate(dir*velocidad, Space.World);
         //transform.Translate(transform.forward*velocidad);
 
@@ -192,31 +194,56 @@ public class Biomochi : MonoBehaviour
     Vector3 newDirection(){
         return new Vector3 (Random.Range(-1f,2f),0,Random.Range(-1f,2f)).normalized;
     }
-    
-    void OnTriggerExit(Collider obj){                
-        dir = -transform.position.normalized;
-        changeDirT = Random.Range(6f,9f);           
-        movT = 0;
-        transform.LookAt(transform.position+dir);
+
+    void OnTriggerExit(Collider obj)
+    {
+        if (obj.gameObject.tag.Equals("world"))
+        {
+            dir = -transform.position.normalized;
+            changeDirT = Random.Range(6f, 9f);
+            movT = 0;
+            transform.LookAt(transform.position + dir);
+        }
+        if (obj.gameObject.tag.Equals("Interact"))
+        {
+
+            Debug.Log("mochi pequeño sale");
+
+        }
+        if (obj.gameObject.tag.Equals("Perception"))
+        {
+
+            Debug.Log("mochi grande");
+
+        }
+
+    }
+    void OnTriggerEnter(Collider obj)
+    {
+        if (obj.gameObject.tag.Equals("Interact"))
+        {
+
+        }
     }
 
     public void spendEnergy(){
-        //Random.InitState(id*(Random.Range(id, id+100000)));        
-        energy -= Random.Range(0.4f*id%3,1.3f);
-        if(energy <= 0){
-            this.gameObject.GetComponent<Animator>().SetBool("Movimiento", false);
-            movT = 0;
-            stop = true;
-        }
+      //Random.InitState(id*(Random.Range(id, id+100000)));
+      energy -= Random.Range(0.4f*id%3,1.3f);
+      if(energy <= 0){
+          this.gameObject.GetComponent<Animator>().SetBool("Movimiento", false);
+          movT = 0;
+          stop = true;
+      }
     }
+
     public void Start()
     {
         Debug.Log(Random.seed);
         Born();
     }
 
-    public void Update(){        
-        movT += Time.deltaTime;        
+    public void Update(){
+        movT += Time.deltaTime;
         if(!stop)
             Move();
         if(movT>changeDirT && energy <= 0){
