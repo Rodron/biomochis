@@ -15,7 +15,7 @@ public class Biomochi : MonoBehaviour
     public enum Dietas { carnivoro, hervivoro, omnivoro };
     [SerializeField] int gloton = 3;
     [SerializeField] float size = 1.0f;
-    public Dietas dieta;
+    [SerializeField] public Dietas dieta;
 
     //genes aleatorios
 
@@ -39,7 +39,7 @@ public class Biomochi : MonoBehaviour
         
     //atributos
 
-    [SerializeField] bool sexo; //true H, false M;
+    public bool sexo; //true H, false M;
     [SerializeField] float velocidad; //depende tamaño
     [SerializeField] int hambre; //0-glotoneria
     [SerializeField] float edad;
