@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class NewBT : MonoBehaviour {
 
     #region variables
-    [SerializeField] bool objetivoDetectado;
+    
     [SerializeField] bool llegadaAlObjetivo;
 
     [SerializeField] bool animacionTerminada;
@@ -105,10 +105,10 @@ public class NewBT : MonoBehaviour {
         Necesidad.AddChild(SecuenciaZombie);
         Necesidad.AddChild(SecuenciaCultismo);
         Necesidad.AddChild(SecuenciaRefugiarse);
-        Necesidad.AddChild(SecuenciaComer);
-        Necesidad.AddChild(SecuenciaSocializar);
+        Necesidad.AddChild(SecuenciaComer);        
         Necesidad.AddChild(SecuenciaReproducción);
-        
+        Necesidad.AddChild(SecuenciaSocializar);
+
         SecuenciaZombie.AddChild(Zombie);
         SecuenciaZombie.AddChild(zombieNodeMachine);
         
@@ -124,11 +124,12 @@ public class NewBT : MonoBehaviour {
         SecuenciaComer.AddChild(Hambre);
         SecuenciaComer.AddChild(comerNodeMachine);
 
+        SecuenciaReproducción.AddChild(Adulto);
+        SecuenciaReproducción.AddChild(reproducirseNodeMachine);
+
         SecuenciaSocializar.AddChild(Social);
         SecuenciaSocializar.AddChild(socializarNodeMachine);
 
-        SecuenciaReproducción.AddChild(Adulto);
-        SecuenciaReproducción.AddChild(reproducirseNodeMachine);
         
         // SetRoot
         NewBT_BT.SetRootNode(Loop);
@@ -145,7 +146,7 @@ public class NewBT : MonoBehaviour {
         Debug.Log(needMachine.exit);
         if(!needMachine.exit){
             Debug.Log("MAQUINA EJECUTA");
-            needMachine.Update(typeOfObjective,animacionTerminada,objetivoDetectado,llegadaAlObjetivo);
+            needMachine.Update(typeOfObjective,animacionTerminada,llegadaAlObjetivo);
         }
        
         NewBT_BT.Update();
@@ -314,7 +315,7 @@ public class NewBT : MonoBehaviour {
     }
      private void DiosNodeMachineAction(){
 
-        gameObject.GetComponent<Animator>().SetTrigger("dios");
+        gameObject.GetComponent<Animator>().SetTrigger("Dios");
 
     }
 

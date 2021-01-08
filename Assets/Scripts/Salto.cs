@@ -25,8 +25,7 @@ public class Salto : StateMachineBehaviour
         if(t<24f){
             animator.gameObject.GetComponent<Transform>().position += a;
         }
-        if(t>=26f&&t<60f){
-            Debug.Log("hola");
+        if(t>=26f&&t<60f){            
             animator.gameObject.GetComponent<Transform>().position -= b;
         }
     }
