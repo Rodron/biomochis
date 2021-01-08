@@ -17,7 +17,7 @@ public class NewBT : MonoBehaviour {
     [SerializeField] bool esZombie;
     [SerializeField] bool tieneHambre; 
     [SerializeField] bool esCultista;
-    [SerializeField] bool diosInteractua;
+    public bool diosInteractua;
 
     [SerializeField] bool ClimaChungo;
 
@@ -27,7 +27,7 @@ public class NewBT : MonoBehaviour {
 
     [SerializeField] bool tenacidad;
     private BehaviourTreeEngine NewBT_BT;
-    private CustomNeedMachine needMachine;
+    public CustomNeedMachine needMachine;
     
     private LoopDecoratorNode Loop;
     private SelectorNode Necesidad;
@@ -163,7 +163,8 @@ public class NewBT : MonoBehaviour {
     private ReturnValues ZombieSuccessCheck()
     {
         //Write here the code for the success check for Zombie
-        if(esZombie){
+        if(gameObject.GetComponent<Biomochi>().isInZombieState)
+        {
             Debug.Log("QUIERO COMER BIOMOCHIS");
             typeOfObjective = "Biomochi";
             needMachine.exit = false;
@@ -193,9 +194,10 @@ public class NewBT : MonoBehaviour {
     
     private ReturnValues CultismoSuccessCheck()
     {
-        if(esCultista){
-            Debug.Log("DIOS TE AMO , DAME UN POQUITO DE COMIDA BB");
-            return ReturnValues.Succeed;
+        if(gameObject.GetComponent<Biomochi>().genes.ContainsKey(Biomochi.Genes.Cultismo))
+        {
+            Debug.Log("DIOS TE AMO , DAME UN POQUITO DE COMIDA BB");            
+            return ReturnValues.Succeed;            
         }
         //Write here the code for the success check for Cultismo
         return ReturnValues.Failed;
@@ -208,7 +210,9 @@ public class NewBT : MonoBehaviour {
     
     private ReturnValues NoTenacidadSuccessCheck()
     {
-        if(!tenacidad){
+        if(!gameObject.GetComponent<Biomochi>().genes.ContainsKey(Biomochi.Genes.Tenacidad))
+        {
+            Debug.Log("soy poderoso");
             return ReturnValues.Succeed;
         }
         //Write here the code for the success check for NoTenacida
@@ -222,15 +226,16 @@ public class NewBT : MonoBehaviour {
     
     private ReturnValues FriocalorSuccessCheck()
     {
-        if (ClimaChungo)
+        if (GameObject.FindGameObjectWithTag("world").GetComponent<World>().climate < 2)
         {
-            if (GameObject.FindGameObjectWithTag("World").GetComponent<World>().climate == 0){ //frio
-                typeOfObjective = "hoguera";            
+            if (GameObject.FindGameObjectWithTag("world").GetComponent<World>().climate == 0){ //frio
+                typeOfObjective = "hoguera";
             }
-            if(GameObject.FindGameObjectWithTag("World").GetComponent<World>().climate == 1){ //calor
+            if(GameObject.FindGameObjectWithTag("world").GetComponent<World>().climate == 1){ //calor
                 typeOfObjective = "agua";
             }
             Debug.Log("ME VOY A REFUGIAR QUE ME MATO");
+            needMachine.exit = false;
             return ReturnValues.Succeed;
         }
         //Write here the code for the success check for Friocalor
@@ -244,9 +249,11 @@ public class NewBT : MonoBehaviour {
     
     private ReturnValues SocialSuccessCheck()
     {
-        if(esSocial){
+        if (gameObject.GetComponent<Biomochi>().genes.ContainsKey(Biomochi.Genes.Social) && Random.Range(0f, 1f) >= (float)gameObject.GetComponent<Biomochi>().genes[Biomochi.Genes.Social])
+        {
             Debug.Log("BUSCO A UN AMIGO");
             typeOfObjective = "Biomochi";
+            needMachine.exit = false;
             return ReturnValues.Succeed;
         }
         //Write here the code for the success check for Friocalor
@@ -259,19 +266,10 @@ public class NewBT : MonoBehaviour {
     
     private ReturnValues HambreSuccessCheck()
     {
-        if (tieneHambre)
+        if (gameObject.GetComponent<Biomochi>().hambre >= gameObject.GetComponent<Biomochi>().gloton-1)
         {
-            if (gameObject.GetComponent<Biomochi>().dieta == Biomochi.Dietas.carnivoro){
-                typeOfObjective = "food_C";
-                //buscar esta
-            }
-            if (gameObject.GetComponent<Biomochi>().dieta == Biomochi.Dietas.hervivoro) {
-                typeOfObjective = "food_V";
-            }
-            if (gameObject.GetComponent<Biomochi>().dieta == Biomochi.Dietas.omnivoro)
-            {
-                typeOfObjective = "food";
-            }
+           
+            typeOfObjective="food";            
             needMachine.exit = false;                    
             Debug.Log("TENGO MUCHISIMO HAMBRE");
             return ReturnValues.Succeed;
@@ -287,10 +285,11 @@ public class NewBT : MonoBehaviour {
 
     private ReturnValues AdultoSuccessCheck()
     {
-        if (esAdulto)
+        if (gameObject.GetComponent<Biomochi>().isInSexyState)
         {
             if(gameObject.GetComponent<Biomochi>())
             typeOfObjective = "Biomochi";
+            needMachine.exit = false;
             Debug.Log("MODO SEXO ACTIVADO");
             return ReturnValues.Succeed;
         }
@@ -299,7 +298,7 @@ public class NewBT : MonoBehaviour {
     }
 
     private void ZombieNodeMachineAction(){
-        Debug.Log("soy un zombie");
+        
     }
 
     private ReturnValues  SuccessCheck(){

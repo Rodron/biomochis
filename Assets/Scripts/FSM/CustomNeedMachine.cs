@@ -3,18 +3,17 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-class CustomNeedMachine{
-
-    
+public class CustomNeedMachine{    
     public GameObject biomochi;
     public int currentState;
-    bool llegadaAlObjetivo;
-    GameObject objective;
+    public bool order;
+    public bool llegadaAlObjetivo;
+    GameObject objective = null;
 
     
     public bool exit;
     
-    bool animacionTerminada;
+    public bool animacionTerminada;
 
     public CustomNeedMachine(GameObject biom){
         currentState = 0;
@@ -37,7 +36,7 @@ class CustomNeedMachine{
                 arrivedAtObjectivePerception();
                 break;
             case 2 :
-                interactionWithObjectivePerception();
+                interactionWithObjectivePerception(typeOfObjective);
                 break;
         }
 
@@ -52,15 +51,17 @@ class CustomNeedMachine{
             {
                 objective = biomochi.GetComponent<Biomochi>().ChooseNearest(biomochi.transform.position, biomochi.GetComponent<Biomochi>().biomochisInRange);
                 if(objective!=null && !objective.GetComponent<Biomochi>().isInZombieState){
-                    Debug.Log("BIOMOCHI OBJETIVO");
+                    Debug.Log("BIIIIOOOMOOOOOOCHI");
                     currentState = 1;
+                    biomochi.GetComponent<Biomochi>().Persue(objective);
                 }
             }
             else if(biomochi.GetComponent<Biomochi>().isInSexyState){
                 objective = biomochi.GetComponent<Biomochi>().ChooseNearest(biomochi.transform.position, biomochi.GetComponent<Biomochi>().biomochisInRange);
-                if(objective!=null && objective.GetComponent<Biomochi>().sexo != biomochi.GetComponent<Biomochi>().sexo && !objective.GetComponent<Biomochi>().isInZombieState){
-                    Debug.Log("BIOMOCHI SUCULENTO OBJETIVO");
-                    currentState = 1;                    
+                if(objective!=null && objective.GetComponent<Biomochi>().sexo != biomochi.GetComponent<Biomochi>().sexo && biomochi.GetComponent<Biomochi>().isInSexyState && !objective.GetComponent<Biomochi>().isInZombieState){
+                    Debug.Log("BIOMOCHI ZUKULEMTO OBJETIVO");
+                    currentState = 1;
+                    biomochi.GetComponent<Biomochi>().Persue(objective);
                 }
             }
             else if(biomochi.GetComponent<Biomochi>().genes.ContainsKey(Biomochi.Genes.Social)){                
@@ -68,39 +69,90 @@ class CustomNeedMachine{
                 if(objective!=null && !objective.GetComponent<Biomochi>().isInZombieState){
                     Debug.Log("BIOMOCHI QUIERO AMIGOS OBJETIVO");
                     currentState = 1;
+                    biomochi.GetComponent<Biomochi>().Persue(objective);
                 }
+            }            
+        }
+        else{
+            if (typeOfObjective == "hoguera")
+            {
+                objective = biomochi.GetComponent<Biomochi>().ChooseNearest(biomochi.transform.position, biomochi.GetComponent<Biomochi>().campfireInRange);                
             }
-            biomochi.GetComponent<Biomochi>().Persue(objective);
-            return;
-        }
-        else if (typeOfObjective == "hoguera")
-        {
-            //objective = biomochi.GetComponent<Biomochi>().ChooseNearest(biomochi.transform.position, biomochi.GetComponent<Biomochi>().campfireInRange);
-            biomochi.GetComponent<Biomochi>().Persue(objective);
-        }
-        else if (typeOfObjective == "agua")
-        {
-
-        }
-        else if (typeOfObjective == "food" || typeOfObjective == "food_V" || typeOfObjective == "food_C")
-        {
-
+            else if (typeOfObjective == "agua")
+            {
+                objective = biomochi.GetComponent<Biomochi>().ChooseNearest(biomochi.transform.position, biomochi.GetComponent<Biomochi>().islandsInRange);
+            }
+            else if (typeOfObjective == "food")
+            {
+                objective = biomochi.GetComponent<Biomochi>().ChooseNearest(biomochi.transform.position, biomochi.GetComponent<Biomochi>().foodInRange);                
+            }
+            
+            if(objective != null){
+                biomochi.GetComponent<Biomochi>().Persue(objective);
+            }
         }
     }
 
-    void arrivedAtObjectivePerception(){        
+    void arrivedAtObjectivePerception(){
         Debug.Log("LLEGANDO A OBJETIVO" );
         if(llegadaAlObjetivo){
+            llegadaAlObjetivo = false;
             Debug.Log("EN EL OBJETIVO");
             currentState = 2;            
         }
     }
 
-    void interactionWithObjectivePerception(){
+    void interactionWithObjectivePerception(string typeOfObjective)
+    {
         Debug.Log("INTERACTUANDO CON EL OBJETIVO");
-        if(animacionTerminada){
+        if (order)
+        {
+            order = false;
+
+            if (typeOfObjective == "Biomochi")
+            {
+                if (biomochi.GetComponent<Biomochi>().isInZombieState)
+                {
+                    biomochi.GetComponent<Biomochi>().kill(objective);
+                }
+                else if (biomochi.GetComponent<Biomochi>().isInSexyState)
+                {
+                    biomochi.GetComponent<Biomochi>().modoSexo(objective.GetComponent<Biomochi>());
+                }
+                else if (biomochi.GetComponent<Biomochi>().genes.ContainsKey(Biomochi.Genes.Social))
+                {
+                    biomochi.GetComponent<Animator>().SetTrigger("Interaccion");
+
+                }
+            }
+            else
+            {
+                if (typeOfObjective == "hoguera")
+                {
+                    ////quedarse quieto
+                    biomochi.GetComponent<Biomochi>().Refugio();
+                }
+                else if (typeOfObjective == "agua")
+                {
+                    biomochi.GetComponent<Biomochi>().Refugio();
+                }
+                else if (typeOfObjective == "food")
+                {
+                    ////comer
+                    biomochi.GetComponent<Biomochi>().comer(objective);
+                }
+            }
+        }
+        if (animacionTerminada)
+        {
+            animacionTerminada = false;
+            order = true;
             Debug.Log("HE TERMINADO DE INTERACTUAR");
             exit = true;
-        }        
+            biomochi.GetComponent<Biomochi>().idle = true;
+            biomochi.GetComponent<Biomochi>().stop = false;
+
+        }
     }
+    
 }

@@ -9,10 +9,11 @@ public class World : MonoBehaviour
     [SerializeField] GameObject lago;
     [SerializeField] GameObject[] comida;
     [SerializeField] GameObject luz;
+    [SerializeField] GameObject mochi;
     float gen = 0f;
     float genC = 0f;
     public int limite = 15;
-    int contador = 0;    
+    public int contador = 0;    
     Transform newtransform;
 
     //Variables del mundo
@@ -51,9 +52,30 @@ public class World : MonoBehaviour
             }
            
         }
-        
-                
-        
+    }
+
+    public void dios() {
+
+        mochi.GetComponent<NewBT>().diosInteractua = true;
+    
+    }
+
+    public void randomBorn() {
+
+        Biomochi randomBoi = mochi.GetComponent<Biomochi>();
+
+        randomBoi.dieta = (Biomochi.Dietas) Random.Range(0,4);
+        randomBoi.color = new Color(Random.Range(0f,1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+        randomBoi.size = Random.Range(1f,3f);
+        randomBoi.gloton = Random.Range(1,6);
+
+       Instantiate(
+            randomBoi.gameObject, new Vector3(
+            Camera.main.transform.localPosition.x,
+            0,
+             Camera.main.transform.localPosition.z),
+            Quaternion.identity);
+
     }
     public void forceClimate(int i) {
         climate = i;
@@ -89,6 +111,20 @@ public class World : MonoBehaviour
             genC = 0;
         }
        
+    }
+
+    public void godFood() {
+
+        int f = Random.Range(0, 3);
+        Instantiate(comida[f], new Vector3(
+            Camera.main.transform.localPosition.x,
+            Camera.main.transform.localPosition.y + 1,
+             Camera.main.transform.localPosition.z),
+            Quaternion.identity);
+        contador++;
+
+        gen = 0;
+
     }
     void Update()
     {

@@ -7,9 +7,10 @@ public class Biomochi : MonoBehaviour
     //genes heredados
     static float standardEDV = 300;
     static float standardH = 10;
+    static float sexyAge = 120;
     float energy = 1000f;
     float timerHambre = 0;
-    float t;
+    float starving = 0;
     int id;
     Vector3 dir = new Vector3(0,0,0);
     float movT;
@@ -17,24 +18,31 @@ public class Biomochi : MonoBehaviour
     float persueVel = 1f;
     public bool idle = true;
 
+    public bool refugiado = false;
 
     public bool isInZombieState = false;
     public bool isInSexyState = false;
-    float zombieLifeTime = 100000;
+    float zombieLifeTime = 0;
     public bool stop = false;
     float changeDirT = 0f;
-    [SerializeField] Color color;
-    public enum Dietas { carnivoro, hervivoro, omnivoro };
-    [SerializeField] int gloton = 3;
-    [SerializeField] float size = 1.0f;
-    [SerializeField] public Dietas dieta;
+    public Color color;
+    
+    public enum Dietas { 
+        carnivoro,
+        hervivoro,
+        omnivoro
+    };    
+
+    public int gloton = 3;
+    public float size;
+    public Dietas dieta;
     Random biomochiRandom = new Random();
-    GameObject objective = null;
+    public GameObject objective = null;
 
     public List<GameObject> foodInRange = new List<GameObject>();
     public List<GameObject> biomochisInRange = new List<GameObject>();
     public List<GameObject> islandsInRange = new List<GameObject>();
-    public List<GameObject> firecampInRange = new List<GameObject>();
+    public List<GameObject> campfireInRange = new List<GameObject>();
 
     //genes aleatorios
 
@@ -60,12 +68,14 @@ public class Biomochi : MonoBehaviour
 
     public bool sexo; //true H, false M;
     [SerializeField] float velocidad; //depende tamaño
-    int hambre; //0+glotoneria
+    public int hambre; //0+glotoneria
     [SerializeField] float edad;
     [SerializeField] GameObject prefab;
 
-    public void Born(){        
+    public void Born(){
+        if (size <= 1) size = 1;
         World mundo = GameObject.FindGameObjectWithTag("world").GetComponent<World>();
+        gameObject.transform.localScale.Scale(new Vector3(size,size,size)); 
         id = mundo.lastId;
         sexo = Random.Range(0,2) != 0;
         hambre = 0;
@@ -77,7 +87,13 @@ public class Biomochi : MonoBehaviour
         UpdateVisuals();
         energy = 1000f*(id+1);
 
-        gameObject.transform.GetChild(4).gameObject.SetActive(sexo);        
+        
+
+        gameObject.transform.GetChild(4).gameObject.SetActive(sexo);
+        if (genes.ContainsKey(Genes.Aventurero))
+        {
+            gameObject.transform.GetChild(3).gameObject.transform.localScale *= 1.2f;
+        }
     }
 
     public void Die()
@@ -124,31 +140,37 @@ public class Biomochi : MonoBehaviour
     }
 
     public void modoSexo(Biomochi mochiPartner) {
-        // Executar animação
+        
+        gameObject.GetComponent<Animator>().SetTrigger("Sexo");
+        mochiPartner.gameObject.GetComponent<Animator>().SetTrigger("Sexo");
+    }
+    
+    public void Reproduccion(Biomochi mochiPartner) {
+        if (!this.sexo){
+            float v = Random.Range(0.0f, 1.0f);
+            Color newColor = v * this.color + (1 - v) * mochiPartner.color;
 
-        // Cuando a animação foi executada
-        float v = Random.Range(0.0f, 1.0f);
-        Color newColor = v * this.color + (1 - v) * mochiPartner.color;
+            v = Random.Range(0.0f, 1.0f);
+            int newGloton = (int) (v*this.gloton + (1-v) * mochiPartner.gloton);
 
-        v = Random.Range(0.0f, 1.0f);
-        int newGloton = (int) (v*this.gloton + (1-v) * mochiPartner.gloton);
+            v = Random.Range(0.0f, 1.0f);
+            float newSize = v * this.size + (1 - v) * mochiPartner.size;
 
-        v = Random.Range(0.0f, 1.0f);
-        float newSize = v * this.size + (1 - v) * mochiPartner.size;
+            int newDieta;
+            if (this.dieta == mochiPartner.dieta)
+            {
+                newDieta = (int) this.dieta;
+            }
+            else {
+                newDieta = Random.Range(0, 3);
+            }
+        
+            GameObject child = Instantiate(prefab, new Vector3(this.gameObject.GetComponent<Transform>().position.x - .5f, this.gameObject.GetComponent<Transform>().position.y, this.gameObject.GetComponent<Transform>().position.z + .2f), Quaternion.identity);
 
-        int newDieta;
-        if (this.dieta == mochiPartner.dieta)
-        {
-            newDieta = (int) this.dieta;
+            child.GetComponent<Biomochi>().InstantiateAttrib(newColor, newGloton, newSize, newDieta);
         }
-        else {
-            newDieta = Random.Range(0, 3);
-        }
-
-
-        GameObject child = Instantiate(prefab,new Vector3 (this.gameObject.GetComponent<Transform>().position.x - .5f, this.gameObject.GetComponent<Transform>().position.y, this.gameObject.GetComponent<Transform>().position.z + .2f), Quaternion.identity);
-
-        child.GetComponent<Biomochi>().InstantiateAttrib(newColor,newGloton,newSize,newDieta);
+        
+        gameObject.GetComponent<NewBT>().needMachine.animacionTerminada = true;
     }
 
     public void InstantiateAttrib(Color sourceColor, int sourceGloton, float sourceSize, int sourceDiet){
@@ -162,11 +184,7 @@ public class Biomochi : MonoBehaviour
             case 1: this.dieta = Dietas.hervivoro; break;
             case 2: this.dieta = Dietas.omnivoro; break;
         }
-        
-        velocidad = size/10;
-
-        //this.randomGen();
-
+        velocidad = size/45;
         UpdateVisuals();
     }
 
@@ -177,12 +195,13 @@ public class Biomochi : MonoBehaviour
 
     public void Move(){
         this.gameObject.GetComponent<Animator>().SetBool("Movimiento", true);
-        if (this.genes.ContainsKey(Genes.Jugueton)){
-            this.gameObject.GetComponent<Animator>().SetBool("Jugueton", true);
-        }
         //Random.InitState((Random.Range(id, id+100000)));
         if(idle){
-            if(movT>changeDirT){
+            if (this.genes.ContainsKey(Genes.Jugueton))
+            {
+                this.gameObject.GetComponent<Animator>().SetBool("Jugueton", true);
+            }
+            if (movT>changeDirT){
 
                 changeDirT = Random.Range(2.5f,5f);
                 dir = newDirection();
@@ -193,6 +212,18 @@ public class Biomochi : MonoBehaviour
             spendEnergy();
         }
         else{
+            dir = (new Vector3(objective.transform.position.x, 0, objective.transform.position.z)-transform.position);
+            if(dir.sqrMagnitude <=2f){
+                if(objective.tag.Equals("Biomochi")){
+                    objective.GetComponent<Biomochi>().stop = true;
+                    objective.GetComponent<Biomochi>().idle = true;
+                    objective.transform.LookAt(gameObject.transform.position);
+                }
+                stop = true;
+                gameObject.GetComponent<NewBT>().needMachine.llegadaAlObjetivo = true;
+                return;
+            }
+            dir = dir.normalized;
             gameObject.transform.LookAt(new Vector3(objective.transform.position.x, 0, objective.transform.position.z));            
         }
         transform.Translate(dir*velocidad*persueVel, Space.World);
@@ -201,6 +232,22 @@ public class Biomochi : MonoBehaviour
 
     Vector3 newDirection(){
         return new Vector3 (Random.Range(-1f,2f),0,Random.Range(-1f,2f)).normalized;
+    }
+
+    public void kill(GameObject biomochi) {
+
+        biomochi.GetComponent<Biomochi>().Die();
+        gameObject.GetComponent<NewBT>().needMachine.animacionTerminada = true;
+    
+    }
+
+    public void comer(GameObject comida) {
+
+        comida.SetActive(false);
+        GameObject.FindGameObjectWithTag("world").GetComponent<World>().contador--;
+        hambre--;
+        gameObject.GetComponent<NewBT>().needMachine.animacionTerminada = true;
+
     }
 
     public GameObject ChooseNearest(Vector3 location, List<GameObject> destinations)
@@ -243,7 +290,7 @@ public class Biomochi : MonoBehaviour
         {
             Debug.Log("mochi grande");
         }
-        else if (obj.gameObject.tag.Equals("food")||obj.gameObject.tag.Equals("food_V")||obj.gameObject.tag.Equals("food_C"))
+        else if (getFoodTag().Contains(obj.gameObject.tag))
         {
             foodInRange.Remove(obj.gameObject);
         }
@@ -257,13 +304,13 @@ public class Biomochi : MonoBehaviour
         }
         else if (obj.gameObject.tag.Equals("hoguera"))
         {
-            firecampInRange.Remove(obj.gameObject);
+            campfireInRange.Remove(obj.gameObject);
         }
     }
 
     void OnTriggerEnter(Collider obj)
     {
-        if (obj.gameObject.tag.Equals("food")||obj.gameObject.tag.Equals("food_V")||obj.gameObject.tag.Equals("food_C"))
+        if(getFoodTag().Contains(obj.gameObject.tag))
         {
             foodInRange.Add(obj.gameObject);
         }
@@ -277,10 +324,31 @@ public class Biomochi : MonoBehaviour
         }
         else if (obj.gameObject.tag.Equals("hoguera"))
         {
-            firecampInRange.Add(obj.gameObject);
+            campfireInRange.Add(obj.gameObject);
         }
     }
+    public List<string> getFoodTag()
+    {
+        List<string> foodTags = new List<string>();
 
+        switch (dieta)
+        {
+            case Dietas.carnivoro:
+                foodTags.Add("food_c"); break;
+            case Dietas.hervivoro:
+                foodTags.Add("food_v"); break;
+            default:
+                foodTags.Add("food");
+                foodTags.Add("food_v");
+                foodTags.Add("food_c");
+                break;
+        }
+        if (genes.ContainsKey(Genes.Canibal))
+        {
+            foodTags.Add("Biomochi");
+        }
+        return foodTags;
+    }
     public void Persue(GameObject objectiveObj)
     {
         idle = false;
@@ -299,6 +367,17 @@ public class Biomochi : MonoBehaviour
       }
     }
 
+    public void Refugio(){
+        refugiado = true;
+    }
+
+    public void CheckClima(){
+        if(GameObject.FindGameObjectWithTag("world").GetComponent<World>().climate >= 2){
+            refugiado = false;
+            gameObject.GetComponent<NewBT>().needMachine.animacionTerminada = true;
+        }
+    }
+
     public void Start()
     {        
         Born();
@@ -307,12 +386,19 @@ public class Biomochi : MonoBehaviour
     public void Update(){
         zombieLifeTime += Time.deltaTime;
         movT += Time.deltaTime;
-        if(!stop)
-            Move();
-        if(movT>changeDirT && energy <= 0){
-            energy = 1000f*(id+1);
-            movT = 0;
-            stop = false;
+        edad += Time.deltaTime;
+        starving += Time.deltaTime;
+        if(!refugiado){
+            if (!stop)
+                Move();
+            if(movT>changeDirT && energy <= 0 && idle){
+                energy = 1000f*(id+1);
+                movT = 0;
+                stop = false;
+            }
+        }
+        else{
+            CheckClima();
         }
         if (genes.ContainsKey(Genes.Metabolismo))
         {
@@ -325,13 +411,12 @@ public class Biomochi : MonoBehaviour
         {
             hambre++;
         }
-        
-        edad+=Time.deltaTime;
+
         if (isInZombieState)
         {
             if (genes.ContainsKey(Genes.EDV))
             {
-                if (zombieLifeTime >= 60  * (float)genes[Genes.EDV])
+                if (zombieLifeTime >= 60 * (float)genes[Genes.EDV])
                 {
                     GameObject.FindGameObjectWithTag("world").GetComponent<World>().population--;
                     gameObject.SetActive(false);
@@ -343,17 +428,29 @@ public class Biomochi : MonoBehaviour
                 gameObject.SetActive(false);
             }
         }
-        else{
-            if(genes.ContainsKey(Genes.EDV)){            
-            if(edad >= standardEDV * (float) genes[Genes.EDV]){
+        else
+        {
+            if (hambre >= gloton && starving >= 60f) { 
                 Die();
             }
+            if ((genes.ContainsKey(Genes.EDV)) && edad >= standardEDV * (float)genes[Genes.EDV])
+            {
+                Die();
+            }                        
+            else if (edad >= standardEDV)
+            {
+                Die();
+            }
+            else if (edad >= standardEDV)
+            {
+                Die();
+            }
+
+            if (edad >= sexyAge)
+            {
+                isInSexyState = true;
+            }
         }        
-        else if(edad >= standardEDV){
-            Die();            
-        }        
-        }
-        
     }
 }
 
