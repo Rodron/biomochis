@@ -12,7 +12,7 @@ public class World : MonoBehaviour
     [SerializeField] GameObject mochi;
     float gen = 0f;
     float genC = 0f;
-    public int limite = 15;
+    public int limite = 35;
     public int contador = 0;    
     Transform newtransform;
 
@@ -55,9 +55,7 @@ public class World : MonoBehaviour
     }
 
     public void dios() {
-
-        mochi.GetComponent<NewBT>().diosInteractua = true;
-    
+        mochi.GetComponent<NewBT>().diosInteractua = true;    
     }
 
     public void randomBorn() {

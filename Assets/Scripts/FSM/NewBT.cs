@@ -142,11 +142,11 @@ public class NewBT : MonoBehaviour {
 
     // Update is called once per frame
     private void Update()
-    {   
-        Debug.Log(needMachine.exit);
+    {
+        
         if(!needMachine.exit){
             Debug.Log("MAQUINA EJECUTA");
-            needMachine.Update(typeOfObjective,animacionTerminada,llegadaAlObjetivo);
+            needMachine.Update(typeOfObjective);
         }
        
         NewBT_BT.Update();
@@ -182,6 +182,7 @@ public class NewBT : MonoBehaviour {
     {
         if(diosInteractua){
             return ReturnValues.Succeed;
+            
         }
         //Write here the code for the success check for DiosInteractua
         return ReturnValues.Failed;

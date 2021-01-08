@@ -23,10 +23,10 @@ public class CustomNeedMachine{
 
     
 
-    public void Update(string typeOfObjective,bool animacionTerminada, bool llegadaAlObjetivo){
-        this.animacionTerminada = animacionTerminada;
-        this.llegadaAlObjetivo = llegadaAlObjetivo;
-        
+    //public void Update(string typeOfObjective,bool animacionTerminada, bool llegadaAlObjetivo){
+        //this.animacionTerminada = animacionTerminada;
+        //this.llegadaAlObjetivo = llegadaAlObjetivo;
+    public void Update(string typeOfObjective){
 
         switch(currentState){
             case 0 :
@@ -45,13 +45,15 @@ public class CustomNeedMachine{
 
     
     void lookForObjectivePerception(string typeOfObjective){
-        Debug.Log("BUSCANDO " + typeOfObjective);
+        if(biomochi.GetComponent<Biomochi>().id == 0)
+            Debug.Log("BUSCANDO " + typeOfObjective);
         if(typeOfObjective == "Biomochi"){
             if (biomochi.GetComponent<Biomochi>().isInZombieState)
             {
                 objective = biomochi.GetComponent<Biomochi>().ChooseNearest(biomochi.transform.position, biomochi.GetComponent<Biomochi>().biomochisInRange);
                 if(objective!=null && !objective.GetComponent<Biomochi>().isInZombieState){
-                    Debug.Log("BIIIIOOOMOOOOOOCHI");
+                    if(biomochi.GetComponent<Biomochi>().id == 0)
+                        Debug.Log("BIIIIOOOMOOOOOOCHI");
                     currentState = 1;
                     biomochi.GetComponent<Biomochi>().Persue(objective);
                 }
@@ -59,7 +61,8 @@ public class CustomNeedMachine{
             else if(biomochi.GetComponent<Biomochi>().isInSexyState){
                 objective = biomochi.GetComponent<Biomochi>().ChooseNearest(biomochi.transform.position, biomochi.GetComponent<Biomochi>().biomochisInRange);
                 if(objective!=null && objective.GetComponent<Biomochi>().sexo != biomochi.GetComponent<Biomochi>().sexo && biomochi.GetComponent<Biomochi>().isInSexyState && !objective.GetComponent<Biomochi>().isInZombieState){
-                    Debug.Log("BIOMOCHI ZUKULEMTO OBJETIVO");
+                    if(biomochi.GetComponent<Biomochi>().id == 0)
+                        Debug.Log("BIOMOCHI ZUKULEMTO OBJETIVO");
                     currentState = 1;
                     biomochi.GetComponent<Biomochi>().Persue(objective);
                 }
@@ -67,7 +70,8 @@ public class CustomNeedMachine{
             else if(biomochi.GetComponent<Biomochi>().genes.ContainsKey(Biomochi.Genes.Social)){                
                 objective = biomochi.GetComponent<Biomochi>().ChooseNearest(biomochi.transform.position, biomochi.GetComponent<Biomochi>().biomochisInRange);
                 if(objective!=null && !objective.GetComponent<Biomochi>().isInZombieState){
-                    Debug.Log("BIOMOCHI QUIERO AMIGOS OBJETIVO");
+                    if(biomochi.GetComponent<Biomochi>().id == 0)
+                        Debug.Log("BIOMOCHI QUIERO AMIGOS OBJETIVO");
                     currentState = 1;
                     biomochi.GetComponent<Biomochi>().Persue(objective);
                 }
@@ -94,10 +98,12 @@ public class CustomNeedMachine{
     }
 
     void arrivedAtObjectivePerception(){
-        Debug.Log("LLEGANDO A OBJETIVO" );
+        if(biomochi.GetComponent<Biomochi>().id == 0)            
+            Debug.Log("LLEGANDO A OBJETIVO" );
         if(llegadaAlObjetivo){
             llegadaAlObjetivo = false;
-            Debug.Log("EN EL OBJETIVO");
+            if(biomochi.GetComponent<Biomochi>().id == 0)
+                Debug.Log("EN EL OBJETIVO");
             currentState = 2;            
         }
     }
@@ -105,12 +111,14 @@ public class CustomNeedMachine{
     void interactionWithObjectivePerception(string typeOfObjective)
     {
         Debug.Log("INTERACTUANDO CON EL OBJETIVO");
-        if (order)
-        {
+        Debug.Log("mi tipo ez: " + typeOfObjective);
+        //if (order)
+        //{
             order = false;
-
+        
             if (typeOfObjective == "Biomochi")
             {
+                Debug.Log("soy bobo");
                 if (biomochi.GetComponent<Biomochi>().isInZombieState)
                 {
                     biomochi.GetComponent<Biomochi>().kill(objective);
@@ -121,38 +129,45 @@ public class CustomNeedMachine{
                 }
                 else if (biomochi.GetComponent<Biomochi>().genes.ContainsKey(Biomochi.Genes.Social))
                 {
+                    Debug.Log("SocIAliZandOO");
                     biomochi.GetComponent<Animator>().SetTrigger("Interaccion");
-
                 }
             }
             else
             {
                 if (typeOfObjective == "hoguera")
                 {
+                    Debug.Log("calentito");
                     ////quedarse quieto
                     biomochi.GetComponent<Biomochi>().Refugio();
                 }
                 else if (typeOfObjective == "agua")
                 {
+                    Debug.Log("fresquito");
                     biomochi.GetComponent<Biomochi>().Refugio();
                 }
                 else if (typeOfObjective == "food")
                 {
+                    Debug.Log("comiendo algo");
                     ////comer
                     biomochi.GetComponent<Biomochi>().comer(objective);
                 }
             }
-        }
+        //}
         if (animacionTerminada)
         {
             animacionTerminada = false;
             order = true;
-            Debug.Log("HE TERMINADO DE INTERACTUAR");
+            if(biomochi.GetComponent<Biomochi>().id == 0)
+                Debug.Log("HE TERMINADO DE INTERACTUAR");
             exit = true;
             biomochi.GetComponent<Biomochi>().idle = true;
             biomochi.GetComponent<Biomochi>().stop = false;
-
+            if(objective.tag.Equals("Biomochi")){
+                    objective.GetComponent<Biomochi>().stop = false;
+                    objective.GetComponent<Biomochi>().idle = true;
+                    //objective.transform.LookAt(gameObject.transform.position);
+            }            
         }
-    }
-    
+    }     
 }

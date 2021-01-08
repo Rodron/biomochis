@@ -11,6 +11,8 @@ public class Adoracion : StateMachineBehaviour
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        
+           animator.gameObject.GetComponent<NewBT>().diosInteractua = false;
         animator.gameObject.GetComponent<Biomochi>().stop = true;
         oldrot = animator.gameObject.GetComponent<Transform>().rotation;
         animator.gameObject.GetComponent<Transform>().LookAt(Camera.main.transform.position);

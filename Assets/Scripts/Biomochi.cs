@@ -6,12 +6,12 @@ public class Biomochi : MonoBehaviour
 {
     //genes heredados
     static float standardEDV = 300;
-    static float standardH = 10;
+    static float standardH = 30;
     static float sexyAge = 120;
     float energy = 1000f;
     float timerHambre = 0;
     float starving = 0;
-    int id;
+    public int id;
     Vector3 dir = new Vector3(0,0,0);
     float movT;
     float coolmov = 0;
@@ -213,10 +213,10 @@ public class Biomochi : MonoBehaviour
         }
         else{
             dir = (new Vector3(objective.transform.position.x, 0, objective.transform.position.z)-transform.position);
-            if(dir.sqrMagnitude <=2f){
+            if(dir.sqrMagnitude <=2f){                
                 if(objective.tag.Equals("Biomochi")){
                     objective.GetComponent<Biomochi>().stop = true;
-                    objective.GetComponent<Biomochi>().idle = true;
+                    objective.GetComponent<Biomochi>().idle = false;
                     objective.transform.LookAt(gameObject.transform.position);
                 }
                 stop = true;
@@ -405,11 +405,13 @@ public class Biomochi : MonoBehaviour
             if(timerHambre > standardH  * (float) genes[Genes.Metabolismo])
             {
                 hambre++;
+                timerHambre = 0;
             }
         
         }else if (timerHambre > standardH)
         {
             hambre++;
+            timerHambre = 0;
         }
 
         if (isInZombieState)

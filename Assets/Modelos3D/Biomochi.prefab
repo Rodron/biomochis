@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7283715963624115461
 Transform:
   m_ObjectHideFlags: 0
@@ -96,6 +96,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f15c9e318b512ee42aecc6667e70f3da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 0
+  idle: 1
+  refugiado: 0
   isInZombieState: 0
   isInSexyState: 0
   stop: 0
@@ -103,8 +106,14 @@ MonoBehaviour:
   gloton: 3
   size: 1
   dieta: 0
+  objective: {fileID: 0}
+  foodInRange: []
+  biomochisInRange: []
+  islandsInRange: []
+  campfireInRange: []
   sexo: 1
   velocidad: 1
+  hambre: 0
   edad: 0
   prefab: {fileID: 2835643276015461053}
 --- !u!54 &2404304467432079945
@@ -168,7 +177,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a34d956be8136642865c3c296d6f8e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objetivoDetectado: 0
   llegadaAlObjetivo: 0
   animacionTerminada: 0
   esZombie: 0
